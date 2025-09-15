@@ -3,14 +3,14 @@ import Menu from './Menu'
 import ActivityArea from './ActivityArea'
 import Information from './Information'
 
-export default function MainBody({infoData}) {
+export default function MainBody({infoData,setShowInput,offset}) {
 
-  
+
   return (
     <div className=' flex mt-[10px] justify-between'>
      
            <div>
-             <Menu/>
+             <Menu setShowInput={setShowInput}/>
            </div>
     
         <div className='flex flex-col'>
@@ -18,7 +18,7 @@ export default function MainBody({infoData}) {
             <div></div>
         </div>
         <div>
-            <Information Propdata={infoData}/>
+            <Information Propdata={infoData} offset={offset}/>
         </div>
     </div>
   )

@@ -1,41 +1,37 @@
 import React, { useEffect, useState } from "react";
-import { use } from "react";
+// import { use } from "react";
 import { climateCode } from "../utils/climate";
 import { iconBundler } from "../utils/icons";
-const wheatherIcon = {
-  rain: "./info-rain.svg",
-  sunny: "./sun.svg",
-  sunnyCloud: "cloud.svg",
-  sunnyRain: "./sunny-rain.svg",
-  thunderStrom: "./thunderStrom.svg",
-};
-const date = new Date();
+
 
 // let yesterday = new Date(new Date().setDate(new Date().getDay() - 1)).getDay()
 
-export default function Information({Propdata}) {
+export default function Information({Propdata,offset}) {
   const[futureData,setFutureData]=useState(JSON.parse(localStorage.getItem("futureData")));
   const [day, setDay] = useState(new Date().getDay());
   const [day_index, setDay_index] = useState(indexHandle(new Date().getDay()));
   const [time, setTime] = useState();
   const [date,setDate]=useState(0);
+  
+  
   // const [data,setData]=useState(Propdata);
 
   useEffect(() => {
-    let Clock = setInterval(() => {
-      setTime(getCurrentTime);
-    }, 1000);
-
-    fetch("https://api.open-meteo.com/v1/forecast?latitude=24.625&longitude=73.75&forecast_days=16&daily=weathercode,apparent_temperature_max,precipitation_sum,windspeed_10m_max,uv_index_max&timezone=auto")
-    .then((res)=>res.json())
-    .then((data)=>{
     
-      localStorage.setItem("futureData",JSON.stringify(data));
-    })
+ 
+
+    
+
+    // fetch(`https://api.open-meteo.com/v1/forecast?latitude=${coords.latitude}&longitude=${coords.longitude}&forecast_days=16&daily=weathercode,apparent_temperature_max,precipitation_sum,windspeed_10m_max,uv_index_max&timezone=auto`)
+    // .then((res)=>res.json())
+    // .then((data)=>{
+    
+    //   localStorage.setItem("futureData",JSON.stringify(data));
+    // })
 
     let parseFutureDate=JSON.parse(localStorage.getItem("futureData"));
     
-    console.log(parseFutureDate);
+    // console.log(parseFutureDate);
     setFutureData(parseFutureDate);
 
 
@@ -44,14 +40,19 @@ export default function Information({Propdata}) {
 
     
 
-     return()=>{
-      clearInterval(Clock);
-     }
+   
   }, []);
 
   useEffect(()=>{
+       let Clock = setInterval(() => {
+        
+      setTime(getCurrentTime);
+    }, 1000);
 
-  },[])
+      return()=>{
+      clearInterval(Clock);
+     }
+  },[offset])
 
   useEffect(()=>{
     futureData.daily.apparent_temperature_max[0]=Propdata.realFeel;
@@ -65,16 +66,25 @@ export default function Information({Propdata}) {
 
   useEffect(() => {
     setTime(getCurrentTime);
-  }, [])
+  }, [offset])
 
   const getCurrentTime = () => {
-    const date = new Date();
-    const formatter = new Intl.DateTimeFormat("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-    const formattedTime = formatter.format(date);
-    return formattedTime;
+    if(offset){
+
+      const maindate = new Date().getTime()+parseInt(offset);
+      console.log("offeset",offset);
+      console.log("date with offser",maindate);
+    const date=new Date(new Date(maindate).toISOString());
+    console.log(date,"from information");
+    return date.toLocaleString("en-US",{
+      hour:"numeric",
+      minute:"2-digit",
+      hour12:true,
+      timeZone:"UTC"
+    })
+  
+    }
+    return 0;
   };
   const days = [
     { day: "SUN", icon: "./info-rain.svg" },
@@ -98,8 +108,8 @@ export default function Information({Propdata}) {
 
   function handleRightClick() {
 
-     console.log("day",day);
-    console.log("day_index",day_index);
+    //  console.log("day",day);
+    // console.log("day_index",day_index);
 
     setDay((day) => (day + 1) % weekLength);
     setDay_index(indexHandle((day + 1) % weekLength));
@@ -112,6 +122,7 @@ export default function Information({Propdata}) {
       setDate(date+1);
       let RightButton=document.querySelector("#prev-btn");
       RightButton.disabled=false;
+      console.log(iconBundler[climateCode(futureData.daily.weathercode[date])])
     }
     
     

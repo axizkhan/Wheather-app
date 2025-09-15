@@ -1,4 +1,5 @@
-import React,{ useState } from 'react'
+import React,{ useEffect, useState } from 'react'
+// import { useGeolocated } from "react-geolocated";
 
 import './App.css'
 import MainPage from './Page/MainPage'
@@ -7,9 +8,13 @@ import LayOut from './components/LayOut'
 function App() {
  
 
+
+
+
   return (
     <LayOut>
-      {<MainPage/>}
+      {<MainPage />}
+
     </LayOut>
   )
 }
