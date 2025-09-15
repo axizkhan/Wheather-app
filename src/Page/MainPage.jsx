@@ -138,7 +138,7 @@ function MainPage() {
           localStorage.setItem("futureData", JSON.stringify(data));
         });
       fetch(
-        `http://api.timezonedb.com/v2.1/get-time-zone?key=${timeApiKey}&format=json&by=position&lat=${coords.latitude}&lng=${coords.longitude}`
+        `https://api.timezonedb.com/v2.1/get-time-zone?key=${timeApiKey}&format=json&by=position&lat=${coords.latitude}&lng=${coords.longitude}`
       )
         .then((res) => res.json())
         .then((data) => {
