@@ -18,7 +18,7 @@ function InputBar({ setShowInput,setCoords }) {
       .then((json) => {
     
         localStorage.setItem("coordsofSearch",JSON.stringify({latitude:json[0].lat,longitude:json[0].lon}))
-        console.log(json);
+        // console.log(json);
         setCoords({latitude:json[0].lat,longitude:json[0].lon});
         // console.log(setCoords,"In input box");
       })

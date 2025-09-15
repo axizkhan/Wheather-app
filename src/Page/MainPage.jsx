@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import MainBody from "../components/MainBody";
 import InputBar from "../components/InputBar";
-import { APIKEY } from "../../config";
+// import { APIKEY } from "../../config";
+import { SpinnerRoundFilled } from 'spinners-react';
+const locationApiKey=import.meta.env.VITE_LOCATION_API_KEY;
+const timeApiKey=import.meta.env.VITE_TIME_API_KEY;
+
 
 
 // import js from "@eslint/js";
@@ -11,6 +15,8 @@ const date = new Date();
 
 
 function MainPage() {
+
+  
   const [WheatherData, setWheatherData] = useState();
   const [headerData, setHeaderData] = useState({});
   const [infoData, setInfoData] = useState({});
@@ -31,7 +37,7 @@ function MainPage() {
           })
         );
 
-        console.log(position.coords);
+        // console.log(position.coords);
 
         setCoords({
           latitude: position.coords.latitude,
@@ -65,11 +71,11 @@ function MainPage() {
       coords.latitude != null && coords.longitude != null ? true : false;
 
     if ((!wheatherDataPresent || !timeCheck) && isCoordPresent) {
-      console.log("Condition is working fine");
+      // console.log("Condition is working fine");
     }
 
     if (coords.latitude != null && coords.longitude != null) {
-      const url = `https://eu1.locationiq.com/v1/reverse?lat=${coords.latitude}&lon=${coords.longitude}&zoom=10&accept-language=en&key=${APIKEY.locationApiKey}&format=json`;
+      const url = `https://eu1.locationiq.com/v1/reverse?lat=${coords.latitude}&lon=${coords.longitude}&zoom=10&accept-language=en&key=${locationApiKey}&format=json`;
       const options = {
         method: "GET",
         headers: { accept: "application/json" },
@@ -78,7 +84,7 @@ function MainPage() {
       fetch(url, options)
         .then((res) => res.json())
         .then((json) => {
-          console.log(json);
+          // console.log(json);
           for (let address in json.address) {
             if (address == "postcode" || address == "country_code") continue;
             localStorage.setItem("city", json.address[address]);
@@ -98,8 +104,8 @@ function MainPage() {
         .then((res) => res.json())
         .then((data) => {
           /// now we find responsive index of the data from currentTime using the time given in the current field of data
-          console.log("Main api request called");
-          console.log(data);
+          // console.log("Main api request called");
+          // console.log(data);
           let currentTimeIndex = data.hourly.time.indexOf(
             data.current.time.slice(0, 14) + "00"
           );
@@ -132,13 +138,13 @@ function MainPage() {
           localStorage.setItem("futureData", JSON.stringify(data));
         });
       fetch(
-        `http://api.timezonedb.com/v2.1/get-time-zone?key=${APIKEY.timeApiKey}&format=json&by=position&lat=${coords.latitude}&lng=${coords.longitude}`
+        `http://api.timezonedb.com/v2.1/get-time-zone?key=${timeApiKey}&format=json&by=position&lat=${coords.latitude}&lng=${coords.longitude}`
       )
         .then((res) => res.json())
         .then((data) => {
           localStorage.setItem("offset", data.gmtOffset*1000);
           setOffset(data.gmtOffset*1000);
-          console.log(data);
+          // console.log(data);
         })
         .catch((err) => console.log(err));
 
@@ -154,10 +160,12 @@ function MainPage() {
     if (localStorage.getItem("wheatherData")) {
       let wheatherData = JSON.parse(localStorage.getItem("wheatherData"));
       setHeaderData({
-        city: location,
+      city: location,
         wheatherCode: wheatherData.current.weathercode,
         temperature: wheatherData.current.temperature_2m,
         temp_unit: wheatherData.current_units.temperature_2m,
+      
+      
       });
       setInfoData({
         realFeel: wheatherData.current.apparent_temperature,
@@ -171,8 +179,10 @@ function MainPage() {
     // console.log("second use effect");
   }, [WheatherData]);
 
+
   return (
-    <div className="w-full flex flex-col gap-3">
+    <React.Fragment>
+      {WheatherData?(<div className="w-full flex flex-col gap-3">
       <Header
         data={headerData}
         showInput={showInput}
@@ -181,7 +191,11 @@ function MainPage() {
         setCoords={setCoords}
       />
       <MainBody infoData={infoData} setShowInput={setShowInput} offset={offset} />
-    </div>
+    </div>):(<div className="h-[100vh] w-full flex justify-center items-center">
+      <SpinnerRoundFilled size={150} thickness={180} speed={150} color="rgba(255, 255, 255, 1)" />
+    </div>)}
+    </React.Fragment>
+    
   );
 }
 

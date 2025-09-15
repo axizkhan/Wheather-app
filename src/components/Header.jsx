@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect,} from "react";
 import { climateCode } from "../utils/climate";
 import { iconBundler } from "../utils/icons";
 import InputBar from "./InputBar";

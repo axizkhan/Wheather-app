@@ -72,10 +72,10 @@ export default function Information({Propdata,offset}) {
     if(offset){
 
       const maindate = new Date().getTime()+parseInt(offset);
-      console.log("offeset",offset);
-      console.log("date with offser",maindate);
+      // console.log("offeset",offset);
+      // console.log("date with offser",maindate);
     const date=new Date(new Date(maindate).toISOString());
-    console.log(date,"from information");
+    // console.log(date,"from information");
     return date.toLocaleString("en-US",{
       hour:"numeric",
       minute:"2-digit",
@@ -122,15 +122,15 @@ export default function Information({Propdata,offset}) {
       setDate(date+1);
       let RightButton=document.querySelector("#prev-btn");
       RightButton.disabled=false;
-      console.log(iconBundler[climateCode(futureData.daily.weathercode[date])])
+      // console.log(iconBundler[climateCode(futureData.daily.weathercode[date])])
     }
     
     
   }
 
   function handleLeftClick() {
-    console.log("day",day);
-    console.log("day_index",day_index);
+    // console.log("day",day);
+    // console.log("day_index",day_index);
     
     
     
